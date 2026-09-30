@@ -13,6 +13,12 @@ customers.to_sql("customers", connection, if_exists="replace", index=False)
 orders.to_sql("orders", connection, if_exists="replace", index=False)
 order_items.to_sql("order_items", connection, if_exists="replace", index=False)
 
+-- Business question:
+-- Which products generate the most revenue?
+--
+-- Approach:
+-- Join order items with products, calculate revenue
+-- as quantity × unit price, then aggregate by product.
 query = """
 SELECT
     p.product_name,
@@ -26,6 +32,12 @@ ORDER BY revenue DESC;
 result = pd.read_sql_query(query, connection)
 print(result)
 
+-- Business question:
+-- What is the average value of an order?
+--
+-- Approach:
+-- First calculate the total revenue for each individual order,
+-- then calculate the average of those order totals.
 query = """
 SELECT
     c.country,
@@ -42,6 +54,12 @@ ORDER BY revenue DESC;
 result = pd.read_sql_query(query, connection)
 print(result)
 
+-- Business question:
+-- What is the average value of an order?
+--
+-- Approach:
+-- First calculate the total revenue for each individual order,
+-- then calculate the average of those order totals
 query = """
 SELECT
     AVG(order_revenue) AS average_order_value
@@ -57,6 +75,13 @@ FROM (
 result = pd.read_sql_query(query, connection)
 print(result)
 
+-- Business question:
+-- How does revenue change over time?
+--
+-- Approach:
+-- Join order items with orders to get the order dates,
+-- calculate revenue as quantity × unit price, then aggregate
+-- the revenue by month.
 query = """
 SELECT
     SUBSTR(o.order_date, 1, 7) AS month,
